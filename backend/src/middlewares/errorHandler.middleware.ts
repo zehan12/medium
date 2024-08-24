@@ -7,7 +7,6 @@ export const errorHandler = (
 ): Response | Promise<Response> => {
     err.statusCode = err.statusCode || 500;
     err.message = err.message || "Internal Server Error";
-
     // Handle Prisma errors
     if (err.code === "P2002") {
         // Unique constraint violation (duplicate entry)

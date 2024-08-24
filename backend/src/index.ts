@@ -3,7 +3,7 @@ import { AppContext } from "./types/appContext";
 import { ENDPOINT_V1 } from "./constants";
 import { authRouter } from "./routes";
 import { env } from "hono/adapter";
-import { errorHandler } from "./middlewares/ErrorHandler";
+import { errorHandler } from "./middlewares";
 
 const app = new Hono<AppContext>();
 

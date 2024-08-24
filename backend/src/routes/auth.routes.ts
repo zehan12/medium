@@ -8,3 +8,5 @@ export const authRouter = new Hono<AppContext>();
 // @desc      create and register user
 // @access    Public
 authRouter.post("/sign-up", authController.createUserHandler);
+
+authRouter.post("/sign-in", authController.loginUserHandler);
