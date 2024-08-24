@@ -3,12 +3,9 @@ import { AppContext } from "./types/appContext";
 import { ENDPOINT_V1 } from "./constants";
 import { authRouter } from "./routes";
 import { env } from "hono/adapter";
+import { errorHandler } from "./middlewares/ErrorHandler";
 
-const app = new Hono<{
-    Bindings: {
-        DATABASE_URL: string;
-    };
-}>();
+const app = new Hono<AppContext>();
 
 /*
 |--------------------------------------------------------------------------
@@ -27,8 +24,15 @@ app.get("/env", (c: Context) => {
     return c.json({ env: env(c) });
 });
 
+/*
+ * Define a route for the root path ("/")
+ * using the HTTP GET method to check if the server is running
+ */
 app.get("/", (c: Context) => {
-    return c.json({ message: "Hello Medium" });
+    return c.json({ message: "server is working" });
 });
+
+// Middleware to handle errors in the application
+app.onError(errorHandler);
 
 export default app;
