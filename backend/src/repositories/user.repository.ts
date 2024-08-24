@@ -1,3 +1,4 @@
+import { CreateUserDto } from "../dtos/user.dto";
 import { createPrismaClient } from "../helpers/prismaClient";
 
 export class UserRepository {
@@ -7,7 +8,7 @@ export class UserRepository {
         this.prisma = createPrismaClient(dataSourceUrl);
     }
 
-    async create(data: { email: string; username: string; password: string }) {
+    async create(data: CreateUserDto) {
         const createdUser = await this.prisma.user.create({ data });
         return createdUser;
     }
