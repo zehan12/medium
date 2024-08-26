@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { AppContext } from "../types/appContext";
 import { authController } from "../controllers";
 
-export const authRouter = new Hono<AppContext>();
+const authRouter = new Hono<AppContext>();
 
 // @route     POST api/v1/auth/sign-up
 // @desc      create and register user
@@ -10,3 +10,5 @@ export const authRouter = new Hono<AppContext>();
 authRouter.post("/sign-up", authController.createUserHandler);
 
 authRouter.post("/sign-in", authController.loginUserHandler);
+
+export { authRouter as authRoutes }
