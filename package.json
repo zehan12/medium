@@ -1,0 +1,17 @@
+{
+  "name": "medium",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {
+    "husky": "^9.1.5"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky",
+    "postinstall": "chmod +x .husky/*"
+  },
+  "keywords": [],
+  "author": "zehan12",
+  "license": "ISC",
+  "description": ""
+}
