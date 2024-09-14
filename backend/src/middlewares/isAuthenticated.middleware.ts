@@ -1,8 +1,13 @@
 import { Context, Next } from "hono";
+import { getCookie } from "hono/cookie";
 import { verify } from "hono/jwt";
 
 export const isAuthenticated = async (c: Context, next: Next) => {
     const authorizationHeader = c.req.header("authorization") || "";
+
+    const authorizationCookie = getCookie(c, "accessToken");
+
+    console.log(authorizationCookie,"cookies")
 
     if (!authorizationHeader) {
         c.status(403);

@@ -50,9 +50,10 @@ export const userService = {
             let userExit = await userRepository.findFirst(loginUserDto);
             if (!userExit) {
                 return {
-                    success: true,
+                    success: false,
                     message: message.INCORRECT_CREDENTIALS,
                     status: StatusCodes.UNAUTHORIZED,
+                    data: null,
                 };
             }
 
