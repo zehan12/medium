@@ -4,8 +4,22 @@ import { ENDPOINT_V1 } from "./constants";
 import { authRoutes, articleRoutes, commentRoutes } from "./routes";
 import { env } from "hono/adapter";
 import { errorHandler, isAuthenticated } from "./middlewares";
+import { cors } from "hono/cors";
 
 const app = new Hono<AppContext>();
+
+app.use(
+    "/*",
+    cors()
+    //     {
+    //     origin: "http://example.com",
+    //     allowHeaders: ["X-Custom-Header", "Upgrade-Insecure-Requests"],
+    //     allowMethods: ["POST", "GET", "OPTIONS"],
+    //     exposeHeaders: ["Content-Length", "X-Kuma-Revision"],
+    //     maxAge: 600,
+    //     credentials: true,
+    // }
+);
 
 /*
 |--------------------------------------------------------------------------
