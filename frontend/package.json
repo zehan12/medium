@@ -16,7 +16,7 @@
     "@radix-ui/react-tabs": "^1.1.0",
     "@types/zxcvbn": "^4.4.5",
     "axios": "^1.7.7",
-    "babel-plugin-react-compiler": "^0.0.0-experimental-03b7aef-20240827",
+    "babel-plugin-react-compiler": "^0.0.0-experimental-7449567-20240904",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "framer-motion": "^11.3.30",
@@ -28,8 +28,7 @@
     "react-dom": "19.0.0-rc-f994737d14-20240522",
     "react-password-checklist": "^1.8.0",
     "tailwind-merge": "^2.5.2",
-    "tailwindcss-animate": "^1.0.7",
-    "zxcvbn": "^4.4.2"
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "typescript": "^5",
@@ -40,5 +39,8 @@
     "tailwindcss": "^3.4.1",
     "eslint": "^8",
     "eslint-config-next": "15.0.0-rc.0"
+  },
+  "peerDependencies": {
+    "zxcvbn": "^4.4.2"
   }
 }
