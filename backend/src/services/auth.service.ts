@@ -5,8 +5,64 @@ import { sign } from "hono/jwt";
 import { CreateUserDto, LoginUserDto } from "../dtos/user.dto";
 import { Context } from "hono";
 import { message } from "../constants/messages";
+import { generateAccessToken } from "../utils/token";
+
+export type TokenSecretsTypes = {
+    ACCESS_TOKEN_SECRET: string;
+    REFRESH_TOKEN_SECRET: string;
+};
 
 export const userService = {
+    generateAccessAndRefreshTokens: catchAsync(
+        async (
+            dataSourceUrl: string,
+            userId: number,
+            tokenSecrets: TokenSecretsTypes
+        ) => {
+            try {
+                console.log("Start generate Access Refresh Token");
+                console.log("all params:", dataSourceUrl, userId, tokenSecrets);
+                const userRepository = new UserRepository(dataSourceUrl);
+                const user = await userRepository.findById(userId);
+                console.log("Find user by id", user);
+                const userObj = {
+                    userId: user?.id,
+                    email: user?.email,
+                };
+
+                console.log("user object", userObj);
+                const accessToken = await generateAccessToken(
+                    userObj,
+                    tokenSecrets.ACCESS_TOKEN_SECRET
+                );
+
+                delete userObj.email;
+                console.log("user object after remove email", userObj);
+
+                const refreshToken = await generateAccessToken(
+                    userObj,
+                    tokenSecrets.REFRESH_TOKEN_SECRET
+                );
+
+                console.log(
+                    "both tokens generated",
+                    refreshToken + " --- " + accessToken
+                );
+                const r = await userRepository.setRefreshToken({
+                    id: userId,
+                    refreshToken,
+                });
+
+                console.log("updated with refresh token in db", r);
+
+                console.log("End generate Access Refresh Token");
+                return { accessToken, refreshToken };
+            } catch (e) {
+                console.log(e, "error during process");
+            }
+        }
+    ),
+
     /**
      * @desc    Sign Up Service
      * @param   { createdUserDto } createUser - Body object data
@@ -16,7 +72,7 @@ export const userService = {
         async (
             dataSourceUrl: string,
             createdUserDto: CreateUserDto,
-            jwtSecret: string
+            tokenSecrets: TokenSecretsTypes
         ) => {
             const userRepository = new UserRepository(dataSourceUrl);
             const createdUser = await userRepository.create(createdUserDto);
@@ -25,7 +81,7 @@ export const userService = {
                 {
                     id: createdUser.id,
                 },
-                jwtSecret
+                tokenSecrets.REFRESH_TOKEN_SECRET
             );
 
             return {
@@ -34,7 +90,7 @@ export const userService = {
                 status: StatusCodes.CREATED,
                 data: {
                     user: createdUser,
-                    token: jwt,
+                    token: {},
                 },
             };
         }
@@ -44,7 +100,10 @@ export const userService = {
         async (
             dataSourceUrl: string,
             loginUserDto: LoginUserDto,
-            jwtSecret: string
+            tokenSecrets: {
+                accessTokenSecret: string;
+                refreshTokenSecret: string;
+            }
         ) => {
             const userRepository = new UserRepository(dataSourceUrl);
             let userExit = await userRepository.findFirst(loginUserDto);
@@ -57,12 +116,12 @@ export const userService = {
                 };
             }
 
-            const jwt = await sign(
-                {
-                    id: userExit.id,
-                },
-                jwtSecret
+            const tokens = await userService.generateAccessAndRefreshTokens(
+                dataSourceUrl,
+                userExit.id,
+                tokenSecrets
             );
+            console.log(tokens);
 
             return {
                 success: true,
@@ -70,7 +129,7 @@ export const userService = {
                 status: StatusCodes.CREATED,
                 data: {
                     user: userExit,
-                    token: jwt,
+                    tokens,
                 },
             };
         }

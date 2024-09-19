@@ -7,7 +7,7 @@ const createUserHandler = async (c: Context) => {
         const { status, success, message, data } = await userService.signUp(
             c.env.DATABASE_URL,
             await c.req.json(),
-            c.env.JWT_SECRET
+            c.env.TOKEN_SECRETS
         );
         c.status(status);
         return c.json({ success, message, data });
@@ -18,10 +18,11 @@ const createUserHandler = async (c: Context) => {
 
 const loginUserHandler = async (c: Context) => {
     try {
+        console.log(c.env)
         const { status, success, message, data } = await userService.signIn(
             c.env.DATABASE_URL,
             await c.req.json(),
-            c.env.JWT_SECRET
+            c.env.TOKEN_SECRETS
         );
 
         if (!success) {
