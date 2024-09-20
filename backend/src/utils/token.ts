@@ -1,17 +1,15 @@
 import { sign } from "hono/utils/jwt/jwt";
 
 export const generateAccessToken = async (
-    user: any,
+    payload: any,
     accessTokenSecret: string
 ) => {
-    console.log(user,accessTokenSecret,"both data")
-    return await sign(user, accessTokenSecret);
+    return await sign(payload, accessTokenSecret);
 };
 
 export const generateRefreshToken = async (
-    user: any,
+    payload: any,
     refreshTokenSecret: string
 ) => {
-    console.log(user,refreshTokenSecret,"both data")
-    return await sign(user, refreshTokenSecret);
+    return await sign(payload, refreshTokenSecret);
 };
